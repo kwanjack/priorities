@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import Layout from '../components/MyLayout';
 import { addTaskByName } from '../mock_api/models';
 
-const Page = () => {
+const addTaskPage = () => {
   const router = useRouter();
 
   let addDummyTask = () => {
@@ -18,4 +18,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default addTaskPage;
