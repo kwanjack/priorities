@@ -1,19 +1,22 @@
 import { useRouter } from 'next/router';
 import Layout from '../components/MyLayout';
 import { addTaskByName } from '../mock_api/models';
+import { useState } from 'react';
 
 const addTaskPage = () => {
   const router = useRouter();
+  let [ taskName, setTaskName ] = useState('');
 
-  let addDummyTask = () => {
-    addTaskByName('Blah' + parseInt(Math.random() * 100));
+  let addTask = () => {
+    addTaskByName( taskName );
     router.push('/');
   };
 
   return (
     <Layout>
       <h1>Add Task</h1> 
-      <button onClick={addDummyTask}> Click to add dumb task </button>
+      <input type="text" onChange={(event) => { setTaskName(event.target.value)} } value={taskName} />
+      <button onClick={addTask}> Click to add task </button>
     </Layout>
   );
 };
