@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import PubSub from 'pubsub-js';
-import { getTasks } from '../mock_api/models';
+import { getTasks, getPriorities } from '../mock_api/models';
 
 
-export function useTasks(friendID) {
+export function useTasks() {
   const [tasks, setTasks] = useState([]);
 
-  useEffect(() => {
+  useEffect(() => { //on first render
     console.log('Setting initial Tasks...');
     let initialTasks = getTasks();
     setTasks(initialTasks);
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { //on every render
     var token = PubSub.subscribe('tasks', (msg, data) => {
       console.log(msg, data);
       setTasks(data);
@@ -24,4 +24,27 @@ export function useTasks(friendID) {
   });
 
   return tasks;
+}
+
+export function usePriorities() {
+  const [priorities, setPriorities] = useState([]);
+
+  useEffect(() => { //on first render
+    console.log('Setting initial Priorities...');
+    let initialPriorities = getPriorities();
+    setPriorities(initialPriorities);
+  }, []);
+
+  useEffect(() => { //on every render
+    var token = PubSub.subscribe('priorities', (msg, data) => {
+      console.log(msg, data);
+      setPriorities(data);
+    });
+
+    return () => {
+      PubSub.unsubscribe(token);
+    };
+  });
+
+  return priorities;
 }
