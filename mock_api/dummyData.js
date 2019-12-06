@@ -8,7 +8,7 @@ let dummyPriorities = [
   {
     id: '0',
     name: 'Short Term Pleasure',
-    ranking: ['0', '2', '1']
+    ranking: ['0', '1', '2']
   },
   {
     id: '1',

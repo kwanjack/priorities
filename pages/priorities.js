@@ -1,13 +1,20 @@
 import { useRouter } from 'next/router';
 import Layout from '../components/MyLayout';
 
+import { usePriorities } from '../hooks/customHooks';
+
+
 const PrioritiesPage = () => {
   const router = useRouter();
 
+  let priorities = usePriorities() || [];
+  
   return (
     <Layout>
       <h1>Priorities</h1> 
-      <p> Content here </p>
+      <ul>
+        {priorities.map(priority => <li>{priority.name}</li>)}
+      </ul>
     </Layout>
   );
 };
