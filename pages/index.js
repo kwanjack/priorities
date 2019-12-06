@@ -5,9 +5,10 @@ import { useTasks, usePriorities } from '../hooks/customHooks';
 import { moveTaskToRank } from '../mock_api/models'
 import { useState } from 'react';
 
+import { List, arrayMove } from 'react-movable';
+
 export default function Home() {
 
-  console.log('hi');
   let tasks = useTasks(); // existing hook
   let priorities = usePriorities() || [];
 
@@ -34,8 +35,6 @@ export default function Home() {
       let ranking = priority.ranking;
       result.push(tasks[parseInt(ranking[i])]);
     };
-
-    console.log('result:', result);
   
     result = result.filter(item => item !== undefined ); 
     return result;
@@ -43,28 +42,39 @@ export default function Home() {
 
   let sortedTasks = sortTasksUsingPriority(pickedPriorityId, tasks);
 
-
   let triggerMovement = () => {
     let lastTask = sortedTasks[tasks.length-1];
-    console.log('yo:', lastTask);
     moveTaskToRank(lastTask.id, pickedPriorityId, 1);
   }
 
-  console.log('sortedTasks:', sortedTasks);
+  let renderTestList = () => {
+
+    let items = sortedTasks.map(st => st.name);
+    // let items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6'];
+    return (
+      <List
+        values={items}
+        onChange={({ oldIndex, newIndex }) => {
+          console.log('old:', oldIndex, 'new:', newIndex);
+            moveTaskToRank(sortedTasks[oldIndex].id, pickedPriorityId, ''+newIndex);
+            {/* this.setState(prevState => ({
+              items: arrayMove(prevState.items, oldIndex, newIndex)
+            })) */}
+          }
+        }
+        renderList={({ children, props }) => <ul {...props}>{children}</ul>}
+        renderItem={({ value, props }) => <li {...props}>{value}</li>}
+      />
+    );
+  }
+
   return (
     <Layout>
       <h1>Home</h1>
       { renderPriorityOptions(priorities) } 
 
-      <button onClick={triggerMovement}>
-        Click to move last place to 2nd place.
-      </button>
-
-
       <ul>
-        {sortedTasks.map(task => (
-          <li key={task.id}> {task.name} </li>
-        ))}
+        {renderTestList()}
       </ul>
 
       <style jsx>{`

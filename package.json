@@ -17,6 +17,7 @@
     "pubsub-js": "^1.7.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-markdown": "^4.2.2"
+    "react-markdown": "^4.2.2",
+    "react-movable": "^2.3.0"
   }
 }
