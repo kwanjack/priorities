@@ -2,6 +2,7 @@ import Layout from '../components/MyLayout';
 import Link from 'next/link';
 import { useTasks, usePriorities } from '../hooks/customHooks';
 
+import { moveTaskToRank } from '../mock_api/models'
 import { useState } from 'react';
 
 export default function Home() {
@@ -42,16 +43,30 @@ export default function Home() {
 
   let sortedTasks = sortTasksUsingPriority(pickedPriorityId, tasks);
 
+
+  let triggerMovement = () => {
+    let lastTask = sortedTasks[tasks.length-1];
+    console.log('yo:', lastTask);
+    moveTaskToRank(lastTask.id, pickedPriorityId, 1);
+  }
+
   console.log('sortedTasks:', sortedTasks);
   return (
     <Layout>
       <h1>Home</h1>
       { renderPriorityOptions(priorities) } 
+
+      <button onClick={triggerMovement}>
+        Click to move last place to 2nd place.
+      </button>
+
+
       <ul>
         {sortedTasks.map(task => (
           <li key={task.id}> {task.name} </li>
         ))}
       </ul>
+
       <style jsx>{`
         h1,
         a {
