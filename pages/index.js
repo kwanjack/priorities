@@ -7,6 +7,9 @@ import { useState } from 'react';
 
 import { List, arrayMove } from 'react-movable';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faList } from '@fortawesome/free-solid-svg-icons';
+
 export default function Home() {
 
   let tasks = useTasks(); // existing hook
@@ -47,12 +50,48 @@ export default function Home() {
     moveTaskToRank(lastTask.id, pickedPriorityId, 1);
   }
 
+  let listStyle = <style jsx="true" global>{`
+    .draggable-left {
+      background: grey;
+      width: 40px;
+      height: 100%;
+      padding: 0px;
+      margin: 0px;
+    }
+
+    ul {
+      padding: 0px;
+    }
+
+    li {
+      display: flex;
+      margin: 10px 0px;
+      background-color: white;
+      list-style-type: none;
+      font-size: 20px;
+      height: 40px;
+      width: 400px;
+      font-weight: 400;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row;
+    }
+
+    .list-item-name {
+      text-align: left;
+      padding-left: 10px;
+      flex: 1;
+    }
+  `}</style>;
+
   let renderTestList = () => {
 
     let items = sortedTasks.map(st => st.name);
     // let items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6'];
+
+
     return (
-      <List
+      <List className="draggable-list"
         values={items}
         onChange={({ oldIndex, newIndex }) => {
           console.log('old:', oldIndex, 'new:', newIndex);
@@ -63,44 +102,32 @@ export default function Home() {
           }
         }
         renderList={({ children, props }) => <ul {...props}>{children}</ul>}
-        renderItem={({ value, props }) => <li {...props}>{value}</li>}
-      />
+        renderItem={({ value, props }) => <li className="list-item" {...props}>
+          <div className="draggable-left"></div>
+          <div className="list-item-name"> {value} </div>
+        </li>}
+      >
+      </List>
     );
   }
 
   return (
     <Layout>
-      <h1>Home</h1>
-      { renderPriorityOptions(priorities) } 
 
-      <ul>
-        {renderTestList()}
-      </ul>
-
+      <div className="main-content">
+        <h1 className="main-title"> <FontAwesomeIcon icon={faList} /> Priorities</h1>
+        <h2 className="sub-title"> Pokemon Sword/Shield Themed Task Organizer.</h2>
+        { renderPriorityOptions(priorities) } 
+        <ul> {renderTestList()} </ul>
+      </div>
       <style jsx>{`
-        h1,
-        a {
-          font-family: 'Arial';
-        }
-
-        ul {
-          padding: 0;
-        }
-
-        li {
-          list-style: none;
-          margin: 5px 0;
-        }
-
-        a {
-          text-decoration: none;
-          color: blue;
-        }
-
-        a:hover {
-          opacity: 0.6;
-        }
+        h1 { font-size: 40px; }
+        
+        .main-title { margin-bottom: 0; }
+        .sub-title { margin-top: 0; font-size: 12px; }
+        .main-content { padding-left: 20px; }
       `}</style>
+      {listStyle}
     </Layout>
   );
 }
