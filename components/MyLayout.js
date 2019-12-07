@@ -51,7 +51,7 @@ const Layout = props => (
     {gradientStyle}
     <div className="layout">
       <div className="content"> {props.children} </div>
-      <Header />
+      <Header {...props} />
       {layoutStyle}
     </div>
 

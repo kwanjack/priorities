@@ -41,19 +41,31 @@ export function addTaskByName(taskName) {
   let task = { id: `${tasks.length}`, name: taskName };
   tasks.push(task);
 
-  
+  console.log('adding task by name:', taskName);
   let priorities = getPriorities();
 
   for (let priority of priorities) {
-    priority.ranking.push(task.id);
+    priority.ranking.unshift(task.id);
   }
 
-  console.log('ah:', tasks);
   localStorage.setItem('tasks', JSON.stringify(tasks));
   localStorage.setItem('priorities', JSON.stringify(priorities));
   PubSub.publish('tasks', tasks);
   PubSub.publish('priorities', priorities);
   return tasks;
+}
+
+export function removeTaskById(taskId) {
+  let tasks = getTasks();
+  let priorities = getPriorities();
+
+  console.log('Removing taskId:', taskId, 'name:', tasks.find(task => task.id === taskId));
+  let newTasks = tasks.filter(task => task.id !== taskId);
+  let newPriorities = priorities.map(priority =>  ({ ...priority, ranking: priority.ranking.filter(id => id !== taskId) }));
+  localStorage.setItem('tasks', JSON.stringify(newTasks));
+  localStorage.setItem('priorities', JSON.stringify(newPriorities));
+  PubSub.publish('tasks', newTasks);
+  PubSub.publish('priorities', newPriorities);
 }
 
 export function addPriorityByName(priorityName) {
@@ -69,11 +81,19 @@ export function addPriorityByName(priorityName) {
   priorities.push(priority);
   localStorage.setItem('priorities', JSON.stringify(priorities));
   PubSub.publish('priorities', priorities);
+  return priority;
+}
+
+export function removePriorityById(priorityId) {
+  let priorities = getPriorities();
+  priorities = priorities.filter(p => p.id !== priorityId);
+
+  localStorage.setItem('priorities', JSON.stringify(priorities));
+  PubSub.publish('priorities', priorities);
+  return priorities;
 }
 
 export function moveTaskToRank(taskId, priorityId, position) {
-
-  console.log('taskId:', taskId, 'priorityId:', priorityId, 'postion:', position);
   let priorities = getPriorities();
   let tasks = getTasks();
 
@@ -81,15 +101,11 @@ export function moveTaskToRank(taskId, priorityId, position) {
   let ranking = priority.ranking.slice();
   let withoutItem = ranking.filter( item => item !== taskId);
   
-  console.log('withoutItem:', withoutItem);
   let newRanking = [...withoutItem.slice(0,position), taskId, ...withoutItem.slice(position)];
   let newPriority = {
     ...priority,
     ranking: newRanking,
   };
-
-  console.log('oldRanking:', ranking);
-  console.log('newRanking', newRanking);
 
   priorities[parseInt(priorityId)] = newPriority;
   localStorage.setItem('priorities', JSON.stringify(priorities));

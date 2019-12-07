@@ -110,7 +110,7 @@ const buttonStyle = <style jsx="true">{`
   }
 `}</style>
 
-const Header = () => {
+const Header = (props) => {
   const router = useRouter();
   
   let popupButton = (label, color, icon) => <button className="button"  key={'blah'}>
@@ -124,7 +124,10 @@ const Header = () => {
   let [ priorityName, setPriorityName ] = useState('');
   
   let addTask = (close) => { addTaskByName( taskName ); close() };
-  let addPriority = (close) => { addPriorityByName( priorityName ); close() };
+  let addPriority = (close) => {
+    let { id } = addPriorityByName( priorityName );
+    props.onAddPriority(id); close()
+  };
 
   return <div className="header">
     <Popup trigger={popupButton('Add Task', "#6ee93c", faPencilAlt)} modal closeOnDocumentClick contentStyle={{ padding: "0px", border: "none" }}>

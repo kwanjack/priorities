@@ -15,7 +15,7 @@ export function useTasks() {
   useEffect(() => { //on every render
     var token = PubSub.subscribe('tasks', (msg, data) => {
       console.log('publish received!');
-      console.log(msg, data);
+      console.log('publish tasks:', msg, data);
       setTasks(data);
     });
 
@@ -38,7 +38,6 @@ export function usePriorities() {
 
   useEffect(() => { //on every render
     var token = PubSub.subscribe('priorities', (msg, data) => {
-      console.log(msg, data);
       setPriorities(data);
     });
 
