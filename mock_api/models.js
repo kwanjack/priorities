@@ -40,8 +40,8 @@ export function addTaskByName(taskName) {
   let tasks = getTasks();
   let task = { id: `${tasks.length}`, name: taskName };
   tasks.push(task);
-  PubSub.publish('tasks', tasks);
 
+  
   let priorities = getPriorities();
 
   for (let priority of priorities) {
@@ -51,6 +51,8 @@ export function addTaskByName(taskName) {
   console.log('ah:', tasks);
   localStorage.setItem('tasks', JSON.stringify(tasks));
   localStorage.setItem('priorities', JSON.stringify(priorities));
+  PubSub.publish('tasks', tasks);
+  PubSub.publish('priorities', priorities);
   return tasks;
 }
 

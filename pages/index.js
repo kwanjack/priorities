@@ -10,6 +10,8 @@ import { List, arrayMove } from 'react-movable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 
+import Select from 'react-select';
+
 export default function Home() {
 
   let tasks = useTasks(); // existing hook
@@ -17,14 +19,74 @@ export default function Home() {
 
   let [pickedPriorityId, setPickedPriorityId] = useState('0');
 
+  let selectStyle = <style jsx="true">{`
+    .select-wrapper {
+      position: absolute;
+      display: flex;
+      flex-direction: row;
+      width: 500px;
+      height: 100px;
+      right: 0;
+      top: 70px;
+      align-items: center;
+    }
+
+    .select {
+      flex: 1
+    }
+
+    .select-label {
+      display: flex;
+      height: 54px;
+      width: 100px;
+      padding: 0px;
+      margin: 0px;
+      background-color: #6d695f;
+      font-size: 20px;
+      font-weight: 700;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+  `}</style>;
+
+
+  let customStyles = {      
+    control: (base, state) => ({
+      ...base,
+      background: "#f0bb39",
+      border: state.isFocused ? 0 : 0,
+      // This line disable the blue border
+      boxShadow: state.isFocused ? 0 : 0,
+      '&:hover': { border: state.isFocused ? 0 : 0 },
+      height: '54px',
+      'min-height': '54px',
+      'border-radius': '0px',
+      fontFamily: "Arial",
+      fontSize: '20px',
+      'font-weight': 700,
+    }),
+    singleValue: (provided, state) => {
+      return { ...provided, fontWeight: 900, color: 'black' };
+    }
+  };
+
   let renderPriorityOptions = (priorities) => {
     let options = [];
-    for (let priority of priorities) {
-      options.push(<option key={priority.id} value={priority.id}> {priority.name} </option>)
-    }
-    return <select onChange={(event) => setPickedPriorityId(event.target.value)}>
-      {options}
-    </select>
+    for (let priority of priorities) { options.push({ value: priority.id,  label: priority.name }) }
+    let picked = options.find(option => option.value === pickedPriorityId);
+    return <div className="select-wrapper">
+      <div className="select-label"> Sort by: </div>
+      <Select className="select" instanceId="selectPriority"
+        value={picked}
+        onChange={(selected) => setPickedPriorityId(selected.value)}
+        options={options}
+        components={{ IndicatorSeparator: () => null }}
+        styles={customStyles}
+      />
+      {selectStyle}
+    </div>;
   };
 
 
@@ -50,17 +112,34 @@ export default function Home() {
     moveTaskToRank(lastTask.id, pickedPriorityId, 1);
   }
 
-  let listStyle = <style jsx="true" global>{`
+  let listStyle = <style jsx="true">{`
+    .draggable-list {
+      margin-top: 80px;
+    }
+
     .draggable-left {
-      background: grey;
-      width: 40px;
-      height: 100%;
+      background: lightgrey;
+      width: 30px;
       padding: 0px;
       margin: 0px;
+      height: 100%;
+    }
+
+    .list-item-content {
+      display: flex;
+      flex-direction: row;
+      height: 40px;
+      align-items: center;
+      font-weight: 700;
     }
 
     ul {
       padding: 0px;
+    }
+
+    li:hover {
+      cursor: move; /* fallback if grab cursor is unsupported */
+      cursor: grab;
     }
 
     li {
@@ -71,7 +150,6 @@ export default function Home() {
       font-size: 20px;
       height: 40px;
       width: 400px;
-      font-weight: 400;
       align-items: center;
       justify-content: space-between;
       flex-direction: row;
@@ -84,33 +162,28 @@ export default function Home() {
     }
   `}</style>;
 
-  let renderTestList = () => {
-
-    let items = sortedTasks.map(st => st.name);
-    // let items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6'];
-
-
+  let renderTestList = (tasks) => {
+    let items = sortTasksUsingPriority(pickedPriorityId, tasks).map(st => st.name);
+    console.log('sorteditems:', items);
     return (
-      <List className="draggable-list"
+      <List 
         values={items}
         onChange={({ oldIndex, newIndex }) => {
-          console.log('old:', oldIndex, 'new:', newIndex);
             moveTaskToRank(sortedTasks[oldIndex].id, pickedPriorityId, ''+newIndex);
-            {/* this.setState(prevState => ({
-              items: arrayMove(prevState.items, oldIndex, newIndex)
-            })) */}
           }
         }
-        renderList={({ children, props }) => <ul {...props}>{children}</ul>}
+        renderList={({ children, props }) => <ul className="draggable-list" {...props}>{children}</ul>}
         renderItem={({ value, props }) => <li className="list-item" {...props}>
-          <div className="draggable-left"></div>
-          <div className="list-item-name"> {value} </div>
-        </li>}
-      >
+          <div className="list-item-content">
+            <div className="draggable-left"></div>
+            <div className="list-item-name"> {value} </div>
+          </div>
+        </li>}>
       </List>
     );
   }
 
+  console.log('rerender tasks:', tasks);
   return (
     <Layout>
 
@@ -118,8 +191,9 @@ export default function Home() {
         <h1 className="main-title"> <FontAwesomeIcon icon={faList} /> Priorities</h1>
         <h2 className="sub-title"> Pokemon Sword/Shield Themed Task Organizer.</h2>
         { renderPriorityOptions(priorities) } 
-        <ul> {renderTestList()} </ul>
+        { renderTestList(tasks) }
       </div>
+
       <style jsx>{`
         h1 { font-size: 40px; }
         

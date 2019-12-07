@@ -59,8 +59,8 @@ const Layout = props => (
     <svg className="trapezoid" id="trapezoid" height="100%" width="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
       <path width="100%" height="100%" d="M100,0
               L100,100
-              L50,100
-              L50,0z" fill="#dad42b"></path>
+              L10,100
+              L60,0z" fill="#e8f62a"></path>
       {trapezoidStyle}
     </svg>
   
