@@ -115,6 +115,9 @@ export default function Home() {
   let listStyle = <style jsx="true">{`
     .draggable-list {
       margin-top: 80px;
+      overflow: auto;
+      max-height: -webkit-calc(100vh - 180px);
+      -webkit-mask-image: -webkit-gradient(linear, left center, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
     }
 
     .draggable-left {
