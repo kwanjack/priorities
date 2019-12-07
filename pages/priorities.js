@@ -13,7 +13,7 @@ const PrioritiesPage = () => {
     <Layout>
       <h1>Priorities</h1> 
       <ul>
-        {priorities.map(priority => <li>{priority.name}</li>)}
+        {priorities.map(priority => <li key={priority.id}>{priority.name}</li>)}
       </ul>
     </Layout>
   );

@@ -14,6 +14,7 @@ export function useTasks() {
 
   useEffect(() => { //on every render
     var token = PubSub.subscribe('tasks', (msg, data) => {
+      console.log('publish received!');
       console.log(msg, data);
       setTasks(data);
     });
