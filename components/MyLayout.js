@@ -51,10 +51,10 @@ const Layout = props => (
     {gradientStyle}
     <div className="layout">
       <div className="content"> {props.children} </div>
-      <Header {...props} />
       {layoutStyle}
     </div>
 
+    <Header {...props} />
     <div className="background"></div>
     <svg className="trapezoid" id="trapezoid" height="100%" width="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
       <path width="100%" height="100%" d="M100,0

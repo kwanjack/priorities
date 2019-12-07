@@ -24,10 +24,10 @@ export default function Home() {
       position: absolute;
       display: flex;
       flex-direction: row;
-      width: 500px;
+      width: 100vw;
       height: 100px;
       right: 0;
-      top: 70px;
+      top: 80px;
       align-items: center;
     }
 
@@ -52,13 +52,14 @@ export default function Home() {
       color: red;
     }
 
-    .priority-option {
-      display: flex;
-      align-content: space-between;
-    }
-
     .option-container {
       display: flex;
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .react-select__single-value .priority-option {
+      visibility: hidden;
     }
 
   `}</style>;
@@ -78,6 +79,7 @@ export default function Home() {
       fontFamily: "Arial",
       fontSize: '20px',
       'font-weight': 700,
+      flex: 1,
     }),
     singleValue: (provided, state) => {
       return { ...provided, fontWeight: 900, color: 'black' };
@@ -105,7 +107,7 @@ export default function Home() {
     let picked = options.find(option => option.value === pickedPriorityId) || null;
     return <div className="select-wrapper">
       <div className="select-label"> Sort by: </div>
-      <Select className="select" instanceId="selectPriority"
+      <Select className="select" instanceId="selectPriority" classNamePrefix="react-select"
         value={picked}
         onChange={(selected) => setPickedPriorityId(selected.value)}
         formatOptionLabel={formatOptionLabel}
@@ -182,7 +184,8 @@ export default function Home() {
       list-style-type: none;
       font-size: 20px;
       height: 40px;
-      width: 400px;
+      min-width: 100%;
+      max-width: 90vw;
       align-items: center;
       justify-content: space-between;
       flex-direction: row;
@@ -228,10 +231,12 @@ export default function Home() {
 
       <style jsx>{`
         h1 { font-size: 40px; }
-        
         .main-title { margin-bottom: 0; }
         .sub-title { margin-top: 0; font-size: 12px; }
-        .main-content { padding-left: 20px; }
+        .main-content {
+          padding-left: 20px;
+          width: -webkit-calc(100vw - 40px);
+         }
       `}</style>
       {listStyle}
     </Layout>
