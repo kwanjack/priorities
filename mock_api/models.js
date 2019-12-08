@@ -94,20 +94,26 @@ export function removePriorityById(priorityId) {
 }
 
 export function moveTaskToRank(taskId, priorityId, position) {
+  console.log('moveTaskToRank:', 'taskId:', taskId, 'priorityId:', priorityId, 'position:', position);
   let priorities = getPriorities();
   let tasks = getTasks();
 
-  let priority = priorities[parseInt(priorityId)];
+  let priorityIdx = priorities.findIndex(priority => priority.id === priorityId);
+  let priority = priorities[priorityIdx];
   let ranking = priority.ranking.slice();
+
+  console.log('oldRanking:', ranking);
   let withoutItem = ranking.filter( item => item !== taskId);
   
   let newRanking = [...withoutItem.slice(0,position), taskId, ...withoutItem.slice(position)];
+
+  console.log('newRanking:', newRanking);
   let newPriority = {
     ...priority,
     ranking: newRanking,
   };
 
-  priorities[parseInt(priorityId)] = newPriority;
+  priorities[priorityIdx] = newPriority;
   localStorage.setItem('priorities', JSON.stringify(priorities));
   PubSub.publish('priorities', priorities);
 }
