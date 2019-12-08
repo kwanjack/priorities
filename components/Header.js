@@ -16,15 +16,19 @@ const linkStyle = {
 
 const headerStyle = <style jsx="true">{`
   .header {
-    display: flex;
     flex-direction: column;
-    height: 100vh;
-    width: 50vw;
+    height: 150px;
+    width: 200px;
     padding: 0px;
-    margin-bottom: 50px;
     margin: 0px;
-    align-items: flex-end;
+    z-index: 10;
+    position: absolute;
+    bottom:0;
+    right:0;
+    align-content: flex-end;
     justify-content: flex-end;
+    display: flex;
+    align-items: flex-end;
   }
 
   .modal {
@@ -43,13 +47,13 @@ const buttonStyle = <style jsx="true">{`
   .button {
     border-radius: 100px;
     margin: 10px;
-    width: 250px;
+    width: 180px;
     flex-direction: row;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0px;
-    margin-right: 100px;
+    margin-right: 40px;
     font-weight: 700;
     font-size: 17px;
     border-width: 0px;
@@ -61,7 +65,7 @@ const buttonStyle = <style jsx="true">{`
     position:relative;
     top:1px;
     left:1px;
-    box-shadow: 0px 0px black;
+    box-shadow: 2px 2px black;
   }
 
   .button-left {
@@ -110,7 +114,7 @@ const buttonStyle = <style jsx="true">{`
   }
 `}</style>
 
-const Header = () => {
+const Header = (props) => {
   const router = useRouter();
   
   let popupButton = (label, color, icon) => <button className="button"  key={'blah'}>
@@ -119,12 +123,14 @@ const Header = () => {
     {buttonStyle}
   </button>;
 
-
   let [ taskName, setTaskName ] = useState('');
   let [ priorityName, setPriorityName ] = useState('');
   
   let addTask = (close) => { addTaskByName( taskName ); close() };
-  let addPriority = (close) => { addPriorityByName( priorityName ); close() };
+  let addPriority = (close) => {
+    let { id } = addPriorityByName( priorityName );
+    props.onAddPriority(id); close()
+  };
 
   return <div className="header">
     <Popup trigger={popupButton('Add Task', "#6ee93c", faPencilAlt)} modal closeOnDocumentClick contentStyle={{ padding: "0px", border: "none" }}>
@@ -135,6 +141,7 @@ const Header = () => {
         </div>
       )}
     </Popup>
+
     <Popup trigger={popupButton('Add Priority', "#50c4e8", faExclamation)} modal closeOnDocumentClick contentStyle={{ padding: "0px", border: "none" }}>
     {close => (
         <div className="modal">
