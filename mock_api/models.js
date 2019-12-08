@@ -14,6 +14,8 @@ Priority {
 import PubSub from 'pubsub-js';
 import { dummyTasks, dummyPriorities } from './dummyData';
 
+function generateId() { return '_' + Math.random().toString(36).substr(2, 9); }
+
 export function getTasks() {
   let tasksJSON = localStorage.getItem('tasks');
   if (!tasksJSON) {
@@ -36,9 +38,10 @@ export function getPriorities() {
   return JSON.parse(priortiesJSON);
 }
 
+
 export function addTaskByName(taskName) {
   let tasks = getTasks();
-  let task = { id: `${tasks.length}`, name: taskName };
+  let task = { id: generateId(), name: taskName };
   tasks.push(task);
 
   console.log('adding task by name:', taskName);
@@ -73,7 +76,7 @@ export function addPriorityByName(priorityName) {
   let tasks = getTasks();
 
   let priority = {
-    id: `${priorities.length}`,
+    id: generateId(),
     name: priorityName,
     ranking: tasks.map(task => task.id)
   };
@@ -94,7 +97,6 @@ export function removePriorityById(priorityId) {
 }
 
 export function moveTaskToRank(taskId, priorityId, position) {
-  console.log('moveTaskToRank:', 'taskId:', taskId, 'priorityId:', priorityId, 'position:', position);
   let priorities = getPriorities();
   let tasks = getTasks();
 
@@ -102,12 +104,10 @@ export function moveTaskToRank(taskId, priorityId, position) {
   let priority = priorities[priorityIdx];
   let ranking = priority.ranking.slice();
 
-  console.log('oldRanking:', ranking);
   let withoutItem = ranking.filter( item => item !== taskId);
   
   let newRanking = [...withoutItem.slice(0,position), taskId, ...withoutItem.slice(position)];
 
-  console.log('newRanking:', newRanking);
   let newPriority = {
     ...priority,
     ranking: newRanking,
