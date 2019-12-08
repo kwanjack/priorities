@@ -1,4 +1,4 @@
-import Header from './Header';
+import FooterButtons from './FooterButtons';
 
 const layoutStyle = <style jsx="true">{`
   .layout {
@@ -54,18 +54,16 @@ const Layout = props => (
       {layoutStyle}
     </div>
 
-    <Header {...props} />
+    <FooterButtons {...props} />
     <div className="background"></div>
     <svg className="trapezoid" id="trapezoid" height="100%" width="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
       <path width="100%" height="100%" d="M100,0
               L100,100
               L10,100
-              L60,0z" fill="#e8f62a"></path>
+              L60,0z" fill="#e8f62a"> </path>
       {trapezoidStyle}
     </svg>
-  
   </div>
-  
 );
 
 export default Layout;

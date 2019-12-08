@@ -7,15 +7,10 @@ import { faExclamation, faHome, faPencilAlt, faList, faInfo } from '@fortawesome
 import { useState } from 'react';
 import { addTaskByName, addPriorityByName } from '../mock_api/models';
 
-
 import Popup from "reactjs-popup";
 
-const linkStyle = {
-  marginRight: 15
-};
-
-const headerStyle = <style jsx="true">{`
-  .header {
+const footerButtonStyle = <style jsx="true">{`
+  .footer-buttons {
     flex-direction: column;
     height: 150px;
     width: 200px;
@@ -36,11 +31,7 @@ const headerStyle = <style jsx="true">{`
     flex-direction: row;
   }
   
-  .popup-content {
-    border: 0px;
-  }
-
-
+  .popup-content { border: 0px; }
 `}</style>;
 
 const buttonStyle = <style jsx="true">{`
@@ -75,13 +66,8 @@ const buttonStyle = <style jsx="true">{`
     border-radius: 100px 0px 0px 100px;
   }
 
-  .button-name {
-    flex: 1;
-  }
-
-  .spacer {
-    height: 60px;
-  }
+  .button-name { flex: 1; }
+  .spacer { height: 60px; }
 
   .add-input {
     height: 90px;
@@ -89,9 +75,7 @@ const buttonStyle = <style jsx="true">{`
     font-size: 50px;
     text-indent: 10px;
   }
-  .add-input:focus {
-    outline: none;
-  }
+  .add-input:focus { outline: none; }
 
   .add-submit-task {
     width: 20%;
@@ -114,7 +98,7 @@ const buttonStyle = <style jsx="true">{`
   }
 `}</style>
 
-const Header = (props) => {
+const FooterButtons = (props) => {
   const router = useRouter();
   
   let popupButton = (label, color, icon) => <button className="button"  key={'blah'}>
@@ -132,7 +116,7 @@ const Header = (props) => {
     props.onAddPriority(id); close()
   };
 
-  return <div className="header">
+  return <div className="footer-buttons">
     <Popup trigger={popupButton('Add Task', "#6ee93c", faPencilAlt)} modal closeOnDocumentClick contentStyle={{ padding: "0px", border: "none" }}>
       {close => (
         <div className="modal">
@@ -151,8 +135,8 @@ const Header = (props) => {
       )}
     </Popup>
     <div className="spacer"></div>
-    { headerStyle }
+    { footerButtonStyle }
   </div>
 };
 
-export default Header;
+export default FooterButtons;

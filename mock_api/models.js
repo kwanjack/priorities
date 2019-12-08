@@ -44,7 +44,6 @@ export function addTaskByName(taskName) {
   let task = { id: generateId(), name: taskName };
   tasks.push(task);
 
-  console.log('adding task by name:', taskName);
   let priorities = getPriorities();
 
   for (let priority of priorities) {
@@ -62,7 +61,6 @@ export function removeTaskById(taskId) {
   let tasks = getTasks();
   let priorities = getPriorities();
 
-  console.log('Removing taskId:', taskId, 'name:', tasks.find(task => task.id === taskId));
   let newTasks = tasks.filter(task => task.id !== taskId);
   let newPriorities = priorities.map(priority =>  ({ ...priority, ranking: priority.ranking.filter(id => id !== taskId) }));
   localStorage.setItem('tasks', JSON.stringify(newTasks));
